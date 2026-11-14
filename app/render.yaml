@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: agent-monster
+    env: docker
+    plan: free
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: DEEPSEEK_BASE_URL
+        value: https://openrouter.ai/api/v1
+      - key: MODEL_CHAT
+        value: meta-llama/llama-3.3-70b-instruct:free

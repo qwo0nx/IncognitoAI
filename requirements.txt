@@ -1,0 +1,6 @@
+aiogram>=3.13,<4
+openai>=1.40
+python-dotenv>=1.0
+duckduckgo-search>=6.0
+numexpr>=2.10
+telegraph>=2.2.0
