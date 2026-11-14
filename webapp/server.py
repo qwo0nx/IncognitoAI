@@ -1,6 +1,7 @@
 import aiohttp
 from aiohttp import web
 import logging
+import os
 from app.chain import stream_answer
 from app.storage import build_storage
 
@@ -19,11 +20,9 @@ async def handle_chat(request):
         if not text:
             return web.json_response({'reply': 'Пустое сообщение'})
             
-        # Имитируем историю сообщений
         messages = [{"role": "user", "content": text}]
         mode = storage.get_mode(user_id)
         
-        # Получаем стрим от нашей ИИ (собираем в один текст)
         stream = await stream_answer(messages, mode=mode, uid=user_id)
         
         full_text = ""
@@ -46,6 +45,10 @@ async def start_web_server():
     app = create_web_app()
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, '0.0.0.0', 8080)
+    
+    # Render выдает порт через переменную окружения PORT
+    port = int(os.getenv("PORT", 8080))
+    
+    site = web.TCPSite(runner, '0.0.0.0', port)
     await site.start()
-    log.info("WebApp сервер запущен на порту 8080")
+    log.info(f"WebApp сервер запущен на порту {port}")
