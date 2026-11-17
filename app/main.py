@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
@@ -15,13 +16,12 @@ async def main():
     dp = Dispatcher()
     dp.include_router(router)
 
-    # Запускаем веб-сервер (для Mini App)
-    await start_web_server()
+    # Запускаем веб-сервер в фоне (чтобы бот не ждал его завершения)
+    asyncio.create_task(start_web_server())
 
     @dp.message(Command('app'))
     async def open_app(m: Message):
-        # Ссылка будет браться из переменной окружения (Render её подставит)
-        import os
+        # Render подставит WEBAPP_URL из настроек (после того, как ты его добавишь)
         url = os.getenv("WEBAPP_URL", "https://localhost:8080")
         kb = InlineKeyboardMarkup(inline_keyboard=[[
             InlineKeyboardButton(text="🚀 Открыть Agent-Monster", web_app=WebAppInfo(url=url))
